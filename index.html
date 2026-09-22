@@ -18,6 +18,33 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2170699185917072"
      crossorigin="anonymous"></script>
+     
+    <!-- 临时修复样式：确保遮罩层在最顶层且可点击 -->
+    <style>
+        /* 强制确保遮罩层覆盖全屏且位于弹窗之下、内容之上 */
+        .reference-help-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+            z-index: 9998; /* 高层级，但低于弹窗 */
+            display: none; /* 默认隐藏 */
+            pointer-events: auto; /* 确保能接收点击 */
+        }
+        
+        /* 当添加 is-open 类时显示 */
+        .reference-help-backdrop.is-open {
+            display: block;
+        }
+        
+        /* 确保弹窗本身层级更高 */
+        .reference-help-panel {
+            z-index: 9999 !important;
+            position: fixed; /* 确保定位相对于视口 */
+        }
+    </style>
 </head>
 <body>
     <div class="page-root">
@@ -207,22 +234,69 @@
     <script src="assets/js/i18n.js"></script>
     <script src="assets/js/app.js"></script>
     
-    <!-- 修复脚本：点击遮罩层关闭术语解释窗口 -->
+    <!-- 修复脚本：全局点击监听，确保点击弹窗外部任何地方都能关闭 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const backdrop = document.getElementById('referenceHelpBackdrop');
             const panel = document.getElementById('referenceHelpPanel');
 
-            if (backdrop && panel) {
-                backdrop.addEventListener('click', function() {
-                    // 当点击遮罩层时，隐藏遮罩和面板
+            // 定义关闭函数
+            const closeReferenceHelp = () => {
+                if (backdrop) {
                     backdrop.classList.add('is-hidden');
                     backdrop.classList.remove('is-open');
-                    
+                    // 兼容可能的其他显示控制方式
+                    backdrop.style.display = 'none'; 
+                }
+                if (panel) {
                     panel.classList.add('is-hidden');
                     panel.classList.remove('is-open');
-                });
+                    // 兼容可能的其他显示控制方式
+                    panel.style.display = 'none';
+                }
+            };
+
+            // 定义打开函数（用于同步状态，如果需要的话，这里主要用关闭）
+            const openReferenceHelp = () => {
+                 if (backdrop) {
+                    backdrop.classList.remove('is-hidden');
+                    backdrop.classList.add('is-open');
+                    backdrop.style.display = 'block';
+                }
+                if (panel) {
+                    panel.classList.remove('is-hidden');
+                    panel.classList.add('is-open');
+                    panel.style.display = 'block'; // 或者 flex/grid，取决于你的CSS
+                }
+            };
+
+            // 1. 监听遮罩层点击（作为备用）
+            if (backdrop) {
+                backdrop.addEventListener('click', closeReferenceHelp);
             }
+
+            // 2. 全局文档点击监听（核心修复）
+            document.addEventListener('click', function(event) {
+                // 如果弹窗当前是隐藏的，不处理
+                if (panel && panel.classList.contains('is-hidden') && panel.style.display === 'none') return;
+                
+                // 如果弹窗正在显示
+                if (panel && !panel.classList.contains('is-hidden')) {
+                    // 检查点击的目标是否在弹窗内部
+                    const isClickInsidePanel = panel.contains(event.target);
+                    
+                    // 如果点击的不是弹窗内部，则关闭
+                    if (!isClickInsidePanel) {
+                        closeReferenceHelp();
+                    }
+                }
+            });
+            
+            // 可选：拦截原有的打开逻辑，确保状态同步
+            // 由于我们不知道 app.js 中具体如何打开弹窗，
+            // 上面的全局监听已经足够处理“关闭”逻辑。
+            // 如果 app.js 打开弹窗时没有移除 is-hidden 类，可能需要调整 CSS 或 JS。
+            // 但通常 is-hidden 类配合 display:none 是最常见的。
         });
     </script>
 
@@ -237,3 +311,6 @@
     <script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
+
+
+
