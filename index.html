@@ -24,7 +24,7 @@
 
     <!-- 页头 -->
     <div class="page-header">
-        <!-- <button type="button" id="openDevLogButton" class="dev-log-open-button small-action-button" data-i18n="header.devLog">开发日志</button> -->
+        <button type="button" id="openDevLogButton" class="dev-log-open-button small-action-button" data-i18n="header.devLog">开发日志</button>
         <div class="page-header-main">
             <h1 class="page-title" data-i18n="app.title">江氏小六壬排盘器</h1>
             <div class="lang-switch" role="group" data-i18n-aria="header.lang">
@@ -32,7 +32,7 @@
                 <button type="button" class="lang-switch-button" data-lang="en">EN</button>
             </div>
         </div>
-        <!-- <button type="button" id="openNotesLibraryButton" class="notes-library-open-button small-action-button" data-i18n="header.notes">我的笔记</button> -->
+        <button type="button" id="openNotesLibraryButton" class="notes-library-open-button small-action-button" data-i18n="header.notes">我的笔记</button>
     </div>
 
     <!-- 主内容区：时钟 / 起卦设置 / 排盘盘面 -->
@@ -115,7 +115,7 @@
     </div>
 
     <!-- 断卦笔记面板 -->
-    <!-- <div id="notesPanelContainer" class="theme-panel notes-panel">
+    <div id="notesPanelContainer" class="theme-panel notes-panel">
         <div class="notes-panel-header">
             <div class="notes-panel-title" data-i18n="notes.title">断卦笔记</div>
         </div>
@@ -131,7 +131,7 @@
             <button type="button" id="saveNotesButton" class="notes-save-button small-action-button" data-i18n="notes.save">保存笔记</button>
             <button type="button" id="resetBoardButton" class="small-action-button notes-save-button" data-i18n="notes.reset">重置盘面</button>
         </div>
-    </div> -->
+    </div>
 
     <!-- HTML 模板 -->
     <template id="notesLibraryItemTemplate">
@@ -206,6 +206,26 @@
     <!-- 应用脚本 -->
     <script src="assets/js/i18n.js"></script>
     <script src="assets/js/app.js"></script>
+    
+    <!-- 修复脚本：点击遮罩层关闭术语解释窗口 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const backdrop = document.getElementById('referenceHelpBackdrop');
+            const panel = document.getElementById('referenceHelpPanel');
+
+            if (backdrop && panel) {
+                backdrop.addEventListener('click', function() {
+                    // 当点击遮罩层时，隐藏遮罩和面板
+                    backdrop.classList.add('is-hidden');
+                    backdrop.classList.remove('is-open');
+                    
+                    panel.classList.add('is-hidden');
+                    panel.classList.remove('is-open');
+                });
+            }
+        });
+    </script>
+
     <!-- Vercel Analytics -->
     <script>
         window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
