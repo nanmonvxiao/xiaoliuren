@@ -1,6 +1,10 @@
 {
   "entries": [
     {
+      "date": "2026/9/22",
+      "description": "删除ai功能，因为没Token 55555555"
+    },
+    {
       "date": "2026/9/5",
       "description": "新增中英文切换"
     },
