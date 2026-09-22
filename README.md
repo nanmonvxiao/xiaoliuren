@@ -1,5 +1,7 @@
 # 江氏小六壬排盘器
 
+##### 克隆来源 https://github.com/cococora-s
+
 <a href="https://xiaoliuren.cc" style="font-size: 1.35em; text-decoration: underline;">在线链接</a>
 <ul style="line-height: 1.75; margin: 0; padding-left: 0; list-style-position: inside;">
 <li style="margin-bottom: 0.5em; font-size: 1.2em;">Vibe Coding 做的，主要用来练习解卦</li>
